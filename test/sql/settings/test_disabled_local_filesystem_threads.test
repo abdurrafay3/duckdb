@@ -1,0 +1,17 @@
+# name: test/sql/settings/test_disabled_local_filesystem_threads.test
+# description: Thread settings work after the local file system is disabled
+# group: [settings]
+
+require skip_reload
+
+statement ok
+SET disabled_filesystems = 'LocalFileSystem';
+
+statement ok
+SET async_threads = 8;
+
+statement ok
+RESET async_threads;
+
+statement ok
+RESET threads;

@@ -260,7 +260,8 @@ void HTTPTransportManager::Initialize(const DBConfig &config) {
 }
 
 idx_t HTTPTransportManager::AutomaticCapacity(const DBConfig &config) {
-	auto &fs = *config.file_system;
+	auto local_fs = FileSystem::CreateLocal();
+	auto &fs = *local_fs;
 	auto io_concurrency = config.options.async_threads == DConstants::INVALID_INDEX
 	                          ? DBConfig::GetSystemMaxAsyncThreads(fs)
 	                          : config.options.async_threads;

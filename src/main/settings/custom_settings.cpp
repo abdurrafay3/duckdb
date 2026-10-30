@@ -1751,8 +1751,9 @@ void ThreadsSetting::SetGlobal(DatabaseInstance *db, DBConfig &config, const Val
 }
 
 void ThreadsSetting::ResetGlobal(DatabaseInstance *db, DBConfig &config) {
-	idx_t new_maximum_threads = config.GetSystemMaxThreads(*config.file_system);
-	if (db) {
+		auto local_fs = FileSystem::CreateLocal();
+		idx_t new_maximum_threads = config.GetSystemMaxThreads(*local_fs);
+		if (db) {
 		TaskScheduler::GetScheduler(*db).SetThreads(new_maximum_threads, Settings::Get<ExternalThreadsSetting>(config));
 	}
 	config.options.maximum_threads = new_maximum_threads;
@@ -1790,7 +1791,8 @@ void AsyncThreadsSetting::SetGlobal(DatabaseInstance *db, DBConfig &config, cons
 }
 
 void AsyncThreadsSetting::ResetGlobal(DatabaseInstance *db, DBConfig &config) {
-	idx_t new_async_threads = config.GetSystemMaxAsyncThreads(*config.file_system);
+	auto local_fs = FileSystem::CreateLocal();
+	idx_t new_async_threads = config.GetSystemMaxAsyncThreads(*local_fs);
 	if (db) {
 		TaskScheduler::GetScheduler(*db).SetAsyncThreads(new_async_threads);
 	}
